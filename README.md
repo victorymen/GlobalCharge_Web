@@ -2,6 +2,7 @@
 全球华人微信小程序充值平台
 
 ##1. 系统概述
+![image](https://github.com/user-attachments/assets/7777c4db-8d7c-41f3-a211-1f5e33547d92)
 
 ##2. UI设计
 

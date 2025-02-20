@@ -1,0 +1,27 @@
+<view class="container">
+  <!-- 选购产品部分 -->
+  <view style="text-align: center; margin: 10px 0px;">订单信息</view>
+  <van-cell-group>
+    <van-cell icon="balance-list-o" title="国家/地区" value="{{fromItem.cname}}" />
+    <van-cell icon="balance-list-o" title="运营商" value="{{fromItem.yys}}" />
+    <van-cell icon="balance-list-o" title="充值类型" value="{{fromItem.typeName}}" />
+    <van-cell icon="balance-list-o" title="手机号(+998)" value="{{fromItem.rechargeNo}}" />
+    <van-cell icon="balance-list-o" title="充值产品" value="{{fromItem.title}}" />
+  </van-cell-group>
+
+  <!-- 价格信息部分 -->
+  <view class="price-container">
+    <van-cell title="优惠金额：" value="{{fromItem.yj-fromItem.yh}}" size="large" />
+    <van-cell title="人民币售价：" value="{{fromItem.yh}}" size="large" />
+  </view>
+
+  <!-- 固定在底部的付款按钮 -->
+<view class="fixed-bottom">
+  <van-goods-action>
+  <van-goods-action-button text="立即付款" bind:click="onClickButton" />
+</van-goods-action>
+</view>
+
+</view>
+
+

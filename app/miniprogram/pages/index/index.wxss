@@ -1,0 +1,50 @@
+
+.container{
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  margin: 10px 5px;
+  padding: 10px  ;
+}
+
+.operator-list {
+  display: flex;
+  text-align: center;
+  flex-wrap: wrap;
+  gap: 8px; /* 项与项之间的间距 */
+  padding: 10px 0px; /* 整体内边距 */
+}
+
+
+.operator-item {
+  background: #93cbff31;
+  padding: 10px 0px ;
+  line-height: 1.2rem;
+  border-radius: 5px;
+  font-size: 12px;
+  width: 31%;
+  border: 1px solid #0447ff71;
+  /* transition: all 0.3s; */
+}
+
+.operator-item.active {
+  border: 1px solid #0408ff;
+  color: rgb(15, 15, 15);
+  /* box-shadow: 0 2px 6px rgba(7, 193, 96, 0.2); */
+}
+
+
+.tab-item {
+  padding-bottom: 2px; 
+  margin:0px 10px;
+     /* 下划线与文字的间距 */
+  color: rgb(78, 75, 75);              /* 默认文字颜色 */
+  transition: all 0.3s;     /* 过渡动画 */
+  border-bottom: 2px solid rgba(78, 75, 75, 0);
+}
+
+.tab-item.active {    
+  border-bottom: 2px solid #003cffdc; /* 浅绿色下划线 */
+}
+
+
+

@@ -1,0 +1,13 @@
+<van-cell center title="头像">
+	<button style="padding: 0px;margin: 0px;line-height: 3px;text-align: right;    display: inline-flex;background-color: rgba(255, 255, 255, 0);" open-type="chooseAvatar" class="avatar-button" bindchooseavatar="onChooseAvatar">
+		<image slot="right-icon" src="{{userioc}}" style="width: 60px; height: 60px;" />
+	</button>
+</van-cell>
+<van-field model:value="{{username}}" label="昵称" input-align="right" type="nickname" />
+<van-field model:value="{{phone}}" label="手机号码" input-align="right" />
+
+<view class="fixed-bottom">
+	<van-goods-action>
+		<van-goods-action-button text="保存修改" bind:click="onClickButton" />
+	</van-goods-action>
+</view>

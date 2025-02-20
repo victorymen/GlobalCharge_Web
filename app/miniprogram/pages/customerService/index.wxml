@@ -1,0 +1,27 @@
+<view class="content">
+
+
+
+		<van-row >
+			<van-col span="16" style="font-size: 12px;text-align:center;line-height: 2;" bind:tap="navigateToDetail">
+				<view style="margin-top: 20px;margin-bottom:10px ; font-size: 16px;  overflow: hidden; text-overflow: ellipsis;">
+				期待与您的沟通！
+				</view>
+				<view style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+					客服在线时间 10：00~22：00
+				</view>
+			</van-col>
+			<van-col span="8" style="line-height: 5rem;font-size: 16px;" bind:tap="navigateToDetail">
+				<van-image width="120" height="120"  src="http://115.159.98.166/images/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87.png" />
+			</van-col>
+		</van-row>
+	
+
+	<van-tabs active="{{ active }}" bind:change="onChange" class="{{PageBase.content.length == 1? 'single-tab' : ''}}">
+		<van-tab wx:for="{{ PageBase.content }}" wx:key="index" wx:for-item="items" title="{{ items.title }}">
+			<van-cell-group>
+				<van-cell wx:for="{{ items.content }}" wx:key="index" wx:for-item="item" title="{{ item.title }}" />
+			</van-cell-group>
+		</van-tab>
+	</van-tabs>
+</view>

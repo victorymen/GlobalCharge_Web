@@ -1,0 +1,20 @@
+.van-value .van-cell,.van-all .van-cell{
+	line-height: var(--cell-line-height,15px) !important;
+	padding: var(--cell-vertical-padding,5px) var(--cell-horizontal-padding,16px) ;
+}
+.van-all .van-cell{
+	padding-bottom:15px  ;
+}
+.van-value .van-cell__value,.van-all .van-cell__value {
+text-align: left;
+font-size: 14px;
+font-weight: 500;
+}
+
+.van-value .van-cell__title,.van-one .van-cell__value,.van-all .van-cell__title{
+	font-size: 16px;
+	font-weight: 700;
+	}
+	.van-one .van-cell__value{
+		color: rgb(54, 66, 241);
+	}

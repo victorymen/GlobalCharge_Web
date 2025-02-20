@@ -1,0 +1,9 @@
+<!-- <home-page wx:if="{{ active === 0 }}" />  -->
+<!-- 首页组件 -->
+<!-- <home-page wx:if="{{ active === 0 }}" id="homeModule" key="homeModule" cached-data="{{pageCache.home}}" bind:save-data="onSaveCacheData" /> -->
+<!-- 用户页组件 -->
+
+<van-tabbar active="{{ active }}" active-color="#07c160" inactive-color="#000" bind:change="onTabChange">
+	<van-tabbar-item icon="home-o">首页</van-tabbar-item>
+	<van-tabbar-item icon="contact-o">我的</van-tabbar-item>
+</van-tabbar>

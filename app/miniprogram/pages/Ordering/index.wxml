@@ -1,0 +1,16 @@
+<view class="container">
+  <van-tabs active="{{ active }}" bind:change="onTabChange">
+    <van-tab wx:for="{{ tabList }}" wx:key="status" title="{{item.title}}" data-status="{{item.status}}">
+      <view wx:for="{{orders}}" wx:key="orderId" style="margin-top: 10px;">
+        <van-cell-group >
+          <van-cell class="van-one" title="{{item.ordertime }}" value="{{item.sernoberstate}}" />
+          <van-cell class="van-value" title="国家:" value="{{item.cname}}" />
+          <van-cell class="van-value" title="运营商:" value="{{item.yys}}" />
+          <van-cell class="van-value" title="套餐类型:" value="{{item.typename}}" />
+					<van-cell class="van-value" title="充值号码:" value="{{item.recharge_no}}" />
+          <van-cell class="van-all" title="充值金额:" value="{{item.title}}" />
+        </van-cell-group>
+      </view>
+    </van-tab>
+  </van-tabs>
+</view>

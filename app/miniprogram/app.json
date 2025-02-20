@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/user/user",
+    "pages/view/page",
+    "pages/submitOrder/index",
+    "pages/Ordering/index",
+    "pages/PersonalCenter/index",
+    "pages/customerService/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "全球充",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {
+    "van-row": "@vant/weapp/row/index",
+    "van-col": "@vant/weapp/col/index",
+    "van-image": "@vant/weapp/image/index"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-a.png"
+      },
+      {
+        "pagePath": "pages/customerService/index",
+        "text": "客服",
+        "iconPath": "images/user.png",
+        "selectedIconPath": "images/user-a.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "images/user.png",
+        "selectedIconPath": "images/user-a.png"
+      }
+    ],
+    "color": "#red",
+    "selectedColor": "#4A90E2",
+    "backgroundColor": "rgb(255, 255, 255)",
+    "borderStyle": "black"
+  }
+
+}

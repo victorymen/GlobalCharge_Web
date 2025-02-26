@@ -58,7 +58,7 @@ Page({
 
     async onClickButton() {
         wx.showLoading({ title: '保存中...' })
-        const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId})
+        const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId,typename:this.data.fromItem.typeName})
         wx.hideLoading()
         if (items) {
             wx.navigateBack({ delta: 1 })

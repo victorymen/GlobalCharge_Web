@@ -6,6 +6,7 @@ Page({
     tabList: [
       { title: '全部', status: 'all' },
       { title: '待支付', status: 'pending' },
+      { title: '待处理', status: 'processing' },
       { title: '已完成', status: 'completed' },
       { title: '已取消', status: 'canceled' }
     ],
@@ -25,8 +26,8 @@ Page({
 
   async loadOrders() {
     try {
-      const res = await productApi.productUserGet();
-      console.log(res);
+      const res = (await productApi.productUserGet()).records;
+      console.log(res.records);
       this.setData({ 
         orders: res.map(item => ({
           ...item,

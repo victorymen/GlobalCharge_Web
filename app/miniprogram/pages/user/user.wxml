@@ -17,10 +17,10 @@
 
 	<van-cell-group inset style="margin: 0px;">
 		<van-cell title="订单中心"/>
-		<van-cell icon="balance-list-o" label="待付款" value='1' is-link url="/pages/Ordering/index"/>
-		<van-cell icon="todo-list-o" label="待处理" is-link url="/pages/Ordering/index"/>
-		<van-cell icon="notes-o" label="成功订单" is-link url="/pages/Ordering/index"/>
-		<van-cell icon="replay" label="关闭订单" is-link url="/pages/Ordering/index"/>
-		<van-cell icon="list-switching" label="全部订单" is-link url="/pages/Ordering/index"/>
+		<van-cell icon="balance-list-o" label="待支付"  is-link url="/pages/Ordering/index?active=1"/>
+		<van-cell icon="todo-list-o" label="待处理" is-link url="/pages/Ordering/index?active=2"/>
+		<van-cell icon="notes-o" label="成功订单" is-link url="/pages/Ordering/index?active=3"/>
+		<van-cell icon="replay" label="关闭订单" is-link url="/pages/Ordering/index?active=4"/>
+		<van-cell icon="list-switching" label="全部订单" is-link url="/pages/Ordering/index?active=0"/>
 	</van-cell-group>
 </view>

@@ -7,6 +7,6 @@
     "preloadBackgroundData": false,
     "skylineRenderEnable": false
   },
-  "libVersion": "2.20.1",
+  "libVersion": "3.0.2",
   "projectname": "quickstart-wx-cloud"
 }

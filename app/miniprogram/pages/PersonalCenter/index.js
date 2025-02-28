@@ -20,8 +20,8 @@ Page({
     //保存修改
     async onClickButton() {
         wx.showLoading({ title: '保存中...' })
-        console.log(this.data)
         await api.saveUpdate({ ...this.data, id: this.data.userId })
+        wx.setStorageSync('userInfo',{...this.data});
         // 隐藏加载状态
         wx.hideLoading()
         wx.navigateBack({ delta: 1 })

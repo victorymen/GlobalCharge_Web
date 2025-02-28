@@ -15,6 +15,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Userinfo extends Model<Userinfo> {
 //id
+@TableId(type = IdType.AUTO)
     private Integer id;
 //微信唯一标识
     private String openid;

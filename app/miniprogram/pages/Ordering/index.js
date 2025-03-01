@@ -1,4 +1,5 @@
 import productApi from '../api/productApi'
+import globeApi from '../api/globeApi'
 Page({
     data: {
         active: 0,
@@ -13,18 +14,11 @@ Page({
         orders: [],
     },
 
-    // 状态文本过滤器
-    statusText: {
-        completed: '已完成',
-        pending: '待支付',
-        canceled: '已取消',
-    },
 
     onLoad(e) {
       e.active = parseInt(e.active, 10) || 0 // 页面加载时默认显示全部订单
       this.setData({ active: e.active,  ...wx.getStorageSync('userInfo') })
       this.loadOrders(e.active)
-      console.log(this.data)
     },
 
     async loadOrders(tabIndex) {
@@ -73,5 +67,18 @@ Page({
       return status === 'all' 
         ? this.data.orders 
         : this.data.orders.filter(o => o.status === status);
+  },
+  async onTabChangeQX(e){
+    const { item } = e.currentTarget.dataset
+     await globeApi.productsUserUpdate({...item,ordertime:new Date(),sernoberstate:'已取消'})
+     await this.loadOrders(this.data.active) 
+  },
+  onTabChangeFK(e){
+    const { item } = e.currentTarget.dataset
+      console.log(item)
+  },
+  onTabChangeXQ(e){
+    const { item } = e.currentTarget.dataset
+      console.log(item)
   }
 })

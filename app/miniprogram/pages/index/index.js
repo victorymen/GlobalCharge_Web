@@ -90,12 +90,6 @@ Page({
 
     //套餐选定
     onSelectOperator2: throttle(function(e) {
-        // wx.sendSms({
-        //     phoneNumber:"15102994475",
-        //     content:'卡密 QADQWFQFQWEQRWEWEGWG',
-        //     success:(res)=>{console.log(123)},
-        //     fail:(err)=>{console.log(12313)}
-        // })
         const { index, item } = e.currentTarget.dataset
         if (!this.data.fromItem.rechargeNo?.trim()) {
             wx.vibrateShort()

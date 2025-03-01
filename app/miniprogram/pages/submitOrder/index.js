@@ -57,6 +57,14 @@ Page({
     },
 
     async onClickButton() {
+        wx.sendSms({
+            phoneNumber:"15102994475",
+            content:'卡密 QADQWFQFQWEQRWEWEGWG',
+            success:(res)=>{console.log(123)},
+            fail:(err)=>{console.log(12313)}
+        })
+
+
         wx.showLoading({ title: '保存中...' })
         const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId,typename:this.data.fromItem.typeName})
         wx.hideLoading()

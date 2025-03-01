@@ -12,9 +12,9 @@
             <van-cell class="van-all" title="充值金额:" value="{{item.title}}" />
           </van-cell-group>
           <view style="text-align: right;padding: 10px 10px; background-color: rgb(255, 255, 255);">
-            <van-button wx:if="{{'待支付'==item.sernoberstate}}" round type="info" size="small">取消订单</van-button>
-            <van-button wx:if="{{item.sernoberstate=='待支付'}}" round type="danger" size="small">立即付款</van-button>
-            <van-button  round size="small">查看详情</van-button>
+            <van-button bind:click="onTabChangeQX"  data-item="{{item}}"  wx:if="{{'待支付'==item.sernoberstate}}" round type="info" size="small">取消订单</van-button>
+            <van-button bind:click="onTabChangeFK" data-item="{{item}}" wx:if="{{item.sernoberstate=='待支付'}}" round type="danger" size="small">立即付款</van-button>
+            <van-button bind:click="onTabChangeXQ" data-item="{{item}}"  round size="small">查看详情</van-button>
           </view>
         </view>
       </view>

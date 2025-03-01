@@ -26,4 +26,13 @@ export default {
             data: datas,
         })
     },
+
+        //修改订单信息 一般为支付成功后 修改为待处理  取消为已取消 充值完成为完成 
+        productsUserUpdate(datas) {
+            return http.request({
+                url: '/api/productsUser',
+                method: 'PUT',
+                data: datas,
+            })
+        },
 }

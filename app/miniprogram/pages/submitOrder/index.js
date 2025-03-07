@@ -1,4 +1,5 @@
 import globeApi from '../api/globeApi'
+import wxApi from '../api/wxApi'
 import { compareSDKVersion, checkPaymentAPI } from '../utils/systemUtils' // 提取工具函数
 
 Page({
@@ -57,30 +58,50 @@ Page({
     },
 
     async onClickButton() {
-        wx.sendSms({
-            phoneNumber:"15102994475",
-            content:'卡密 QADQWFQFQWEQRWEWEGWG',
-            success:(res)=>{console.log(123)},
-            fail:(err)=>{console.log(12313)}
-        })
+        // wx.sendSms({
+        //     phoneNumber:"15102994475",
+        //     content:'卡密 QADQWFQFQWEQRWEWEGWG',
+        //     success:(res)=>{console.log(123)},
+        //     fail:(err)=>{console.log(12313)}
+        // })
 
 
-        wx.showLoading({ title: '保存中...' })
-        const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId,typename:this.data.fromItem.typeName})
-        wx.hideLoading()
-        if (items) {
-            wx.navigateBack({ delta: 1 })
-        }
-
-        // if (!this.checkPaymentAvailability()) return
-        // try {
-        //   const paymentResult = await this.handleVirtualPayment()
-        //   await this.handlePaymentSuccess(paymentResult)
-        // } catch (error) {
-        //   this.handlePaymentError(error)
+        // wx.showLoading({ title: '保存中...' })
+        // const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId,typename:this.data.fromItem.typeName})
+        // wx.hideLoading()
+        // if (items) {
+        //     wx.navigateBack({ delta: 1 })
         // }
+        console.log(this.data)
+        try {
+              // 生成商户订单号
+        const outTradeNo = this.generateOutTradeNo();
+        const prepayResult = await wxApi.prepayWithRequestPayment({
+            "description":this.data.fromItem.cname+'-'+this.data.fromItem.typeName+'-'+this.data.fromItem.ename+'-'+this.data.fromItem.title,// 商品描述
+            "outTradeNo":outTradeNo,// 商户订单号
+            "notifyUrl":'https://www.weixin.qq.com/wxpay/pay.php',// 支付成功回调地址
+            "amount" : {// 金额信息
+                "total" : 1,
+                "currency" : "CNY"
+              },
+              "payer" : {// 支付者信息
+                "openid" : this.data.fromItem.openid,
+              },
+         })
+        if (!this.checkPaymentAvailability()) return
+           // 调用微信支付
+           const paymentResult = await this.handleWechatPayment(prepayResult);
+          await this.handlePaymentSuccess(paymentResult)
+        } catch (error) {
+          this.handlePaymentError(error)
+        }
     },
-
+    // 生成商户订单号
+    generateOutTradeNo() {
+        const timestamp = Date.now();
+        const randomNum = Math.floor(Math.random() * 10000);
+        return `WXPAY${timestamp}${randomNum}`;
+    },
     // 检查支付能力
     checkPaymentAvailability() {
         const { sdkVersion } = this
@@ -96,20 +117,31 @@ Page({
         }
         return true
     },
-
-    // 处理虚拟支付
-    handleVirtualPayment() {
+    // 处理微信支付
+    handleWechatPayment(prepayResult) {
+        console.log('prepayResult', prepayResult)
         return new Promise((resolve, reject) => {
-            wx.requestVirtualPayment({
-                ...this.data.paymentParams,
-                signData: JSON.stringify(this.data.paymentParams),
-                paySig: this.generatePaySignature(),
-                signature: this.generatePaySignature(),
-                mode: 'short_series_goods',
+            // 确保所有参数都是字符串
+            const paymentParams = {
+                timeStamp: prepayResult.timeStamp,
+                nonceStr:prepayResult.nonceStr,
+                package: prepayResult.packageVal,
+                signType: prepayResult.signType,
+                paySign:prepayResult.paySign,
+            };
+
+            // 检查必要参数是否为空
+            if (!paymentParams.timeStamp || !paymentParams.nonceStr || 
+                !paymentParams.package || !paymentParams.paySign) {
+                reject({ errMsg: '支付参数不完整' });
+                return;
+            }
+            wx.requestPayment({
+                ...paymentParams,
                 success: resolve,
-                fail: reject,
-            })
-        })
+                fail: reject
+            });
+        });
     },
 
     // 支付成功处理
@@ -118,6 +150,7 @@ Page({
         try {
             await productApi.productUserSave({
                 ...this.data.fromItem,
+                outTradeNo: res.outTradeNo,
                 prodType: 1,
             })
             wx.showToast({ title: '支付并保存成功' })
@@ -138,11 +171,7 @@ Page({
         })
     },
 
-    // 生成支付签名（示例）
-    generatePaySignature() {
-        // 实际项目应调用安全接口生成签名
-        return 'd0b8bbccbe109b11549bcfd6602b08711f46600965253a949cd6a2b895152f9d'
-    },
+
 
     // 错误码映射
     getErrorMessage(code) {

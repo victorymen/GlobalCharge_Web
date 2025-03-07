@@ -11,6 +11,7 @@ export default {
             showError: true
         })
     },
+    //修改用户信息
     saveUpdate(params) {
         return http.request({
             url: '/api/userInfo',

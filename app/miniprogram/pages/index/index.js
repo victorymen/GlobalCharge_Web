@@ -12,6 +12,8 @@ const throttle = (fn, delay) => {
 
 Page({
     data: {
+        showHistory: false,
+        historyNumbers: ['13800138000', '13900139000', '13700137000'], // 假设这是历史充值手机号列表
         searchValue: '',
         filteredProductO: [],
         notice: '平台不会主动联系您，请不要给陌生人充值话费，充值失败请在订单记录申请退款。',
@@ -62,10 +64,12 @@ Page({
     },
 
     onLoad: async function (options) {
+   const openid= wx.getStorageSync('userInfo').openid
         try {
             const productO = await globeApi.countries({})
+            const rechargeNo = await globeApi.rechargeNo({openid:openid})
+            console.log('productO', productO)
             if (!productO?.length) throw new Error('无可用国家数据')
-
             this.safeSetData(
                 {
                     productO,

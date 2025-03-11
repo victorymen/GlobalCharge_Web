@@ -1,7 +1,7 @@
 import http from '../utils/http'
 
 export default {
-    // 修改订单信息  微信支付后进行回写修改支付状态 
+    // 修改订单信息  微信支付后进行回写修改支付状态
     productUserSave(datas) {
         return http.request({
             url: '/api/productsUser',

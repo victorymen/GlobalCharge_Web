@@ -35,4 +35,12 @@ export default {
             data: datas,
         })
     },
+    //根据用户openid 获取充值过的手机号
+    rechargeNo(datas) {
+        return http.request({
+            url: '/api/productsUser/rechargeNo',
+            method: 'POST',
+            data: datas,
+        })
+    },
 }

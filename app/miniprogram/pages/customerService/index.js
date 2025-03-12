@@ -1,38 +1,34 @@
-import http from '../utils/http'
-
+const app = getApp();
 Page({
-    data: {
-        active: 0,
-        tabCount: 1,
-        PageBase: {
-            content: [
-                {
-                    title: '常见问题',
-                    content: [
-                      {
-                        title: '老郭手机号如何查询话费、流量等',
-                        value: '在线客服',
-                    },
-                    {
-                      title: '流量为什么用的快？',
-                      value: '在线客服',
-                  },
-                  {
-                    title: '如何购买电话卡？办理电话卡？',
-                    value: '在线客服',
-                },
-                    ],
-                },
-            ],
+	data: {
+		isLoading: true,					// 判断是否尚在加载中
+		article: {}						// 内容数据
+  },
+	onLoad: function () {
+    const _ts = this;
+
+    //请求markdown文件，并转换为内容
+    wx.request({
+        url: 'https://github.com/jin-yufeng/mp-html/blob/master/README.md',
+        header: {
+            'content-type': 'application/x-www-form-urlencoded'
         },
-    },
-
-    onLoad() {},
-
-    onChange(event) {
-        console.log('当前激活的标签索引:', event.detail)
-        this.setData({
-            active: event.detail,
-        })
-    },
+        success: (res) => {
+            //将markdown内容转换为towxml数据
+            let data = app.towxml(res.data,'markdown',{
+              base: 'https://example.com', // 重要！设置资源基础路径（如图片相对路径补全）
+              theme: 'light',             // 主题（可选）
+              events: {                   // 自定义事件（可选）
+                tap: (e) => {
+                  console.log('元素被点击', e);
+                }
+              }
+            });
+            //设置数据
+            _ts.setData({
+                article: data
+            });
+        }
+    });
+  }
 })

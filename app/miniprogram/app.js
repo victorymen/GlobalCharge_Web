@@ -16,6 +16,7 @@ App({
        this.onLoginClick()
   
     },
+    towxml:require('/towxml/index'),
     onError(err) {
         console.error('全局错误捕获:', err)
     },

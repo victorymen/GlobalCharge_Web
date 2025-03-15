@@ -1,20 +1,16 @@
-import globeApi from '../api/globeApi'
+import productApi from '../api/productApi'
 import wxApi from '../api/wxApi'
 import { compareSDKVersion, checkPaymentAPI } from '../utils/systemUtils' // 提取工具函数
 
 Page({
     data: {
-        paymentParams: {
-            // 集中管理支付参数
-            offerId: '123',
-            buyQuantity: 1,
-            env: 1,
-            currencyType: 'CNY',
-            productId: 'testproductId',
-            goodsPrice: 10,
-            outTradeNo: 'xxxxxx',
-            attach: 'testdata',
-        },
+        isShowBut: false,
+        UNPAID:'待支付',
+        CHARGEING:'充值中',
+        PAID:'已支付',
+        DELIVERING:'发货中',
+        COMPLETED:'已完成',
+        CANCELLED:'已取消',
     },
 
     onLoad(options) {
@@ -44,9 +40,10 @@ Page({
                         ...fromItem,
                         openid: wx.getStorageSync('userInfo').openid,
                         userpaystate: '未支付',
-                        sernoberstate: '待付款',
+                        sernoberstate: '待支付',
                     },
                     'paymentParams.goodsPrice': fromItem.selling_price, // 动态设置价格
+                    isShowBut: true,
                 })
                 delete this.data.fromItem.id
                 console.log(this.data)
@@ -65,7 +62,6 @@ Page({
         //     fail:(err)=>{console.log(12313)}
         // })
 
-
         // wx.showLoading({ title: '保存中...' })
         // const items = await globeApi.productsUser({ ...this.data.fromItem, ordertime: new Date() ,countryid:this.data.fromItem.countryId,typename:this.data.fromItem.typeName})
         // wx.hideLoading()
@@ -73,40 +69,46 @@ Page({
         //     wx.navigateBack({ delta: 1 })
         // }
         console.log(this.data)
+
+        // 获取当前时间
+        const now = new Date()
+        // 增加30分钟
+        const expireTime = new Date(now.getTime() + 30 * 60000)
+        // 格式化时间为 yyyyMMddHHmmss
+        const formattedExpireTime = expireTime.toISOString().replace(/[-:T]/g, '').slice(0, 14)
+        // 生成商户订单号
+        const outTradeNo = this.generateOutTradeNo()
         try {
-              // 生成商户订单号
-        const outTradeNo = this.generateOutTradeNo();
-        const prepayResult = await wxApi.prepayWithRequestPayment({
-            "description":this.data.fromItem.cname+'-'+this.data.fromItem.typeName+'-'+this.data.fromItem.ename+'-'+this.data.fromItem.title,// 商品描述
-            "outTradeNo":outTradeNo,// 商户订单号
-            "notifyUrl":'https://www.weixin.qq.com/wxpay/pay.php',// 支付成功回调地址
-            "amount" : {// 金额信息
-                "total" : 1,
-                "currency" : "CNY"
-              },
-              "payer" : {// 支付者信息
-                "openid" : this.data.fromItem.openid,
-              },
-         })
-        if (!this.checkPaymentAvailability()) return
-           // 调用微信支付
-           const paymentResult = await this.handleWechatPayment(prepayResult);
-          await this.handlePaymentSuccess(paymentResult)
+            const prepayResult = await wxApi.prepayWithRequestPayment({
+                description: this.data.fromItem.cname + '-' + this.data.fromItem.typeName + '-' + this.data.fromItem.ename + '-' + this.data.fromItem.title, // 商品描述
+                outTradeNo: outTradeNo, // 商户订单号
+                time_expire: formattedExpireTime,
+                notifyUrl: 'https://wechatglow.online/api/wxApi/closeOrderTradeNo', // 支付成功回调地址
+                // 金额信息
+                amount: { total: 1, currency: 'CNY' },
+                // 支付者信息
+                payer: { openid: this.data.fromItem.openid },
+            })
+            if (!this.checkPaymentAvailability()) return
+            // 调用微信支付
+            const paymentResult = await this.handleWechatPayment(prepayResult)
+            await this.handlePaymentSuccess(paymentResult)
         } catch (error) {
-          this.handlePaymentError(error)
+            await productApi.productUserSave({ ...this.data.fromItem,ordertime: new Date(),sernoberstate:'UNPAID', outTradeNo: outTradeNo })
+            await wxApi.closeOrder({ outTradeNo: outTradeNo })
+            this.handlePaymentError(error)
         }
     },
     // 生成商户订单号
     generateOutTradeNo() {
-        const timestamp = Date.now();
-        const randomNum = Math.floor(Math.random() * 10000);
-        return `WXPAY${timestamp}${randomNum}`;
+        const timestamp = Date.now()
+        const randomNum = Math.floor(Math.random() * 10000)
+        return `WXPAY${timestamp}${randomNum}`
     },
     // 检查支付能力
     checkPaymentAvailability() {
         const { sdkVersion } = this
         const isAvailable = checkPaymentAPI(sdkVersion)
-
         if (!isAvailable) {
             wx.showToast({
                 title: '当前版本不支持支付功能',
@@ -124,36 +126,31 @@ Page({
             // 确保所有参数都是字符串
             const paymentParams = {
                 timeStamp: prepayResult.timeStamp,
-                nonceStr:prepayResult.nonceStr,
+                nonceStr: prepayResult.nonceStr,
                 package: prepayResult.packageVal,
                 signType: prepayResult.signType,
-                paySign:prepayResult.paySign,
-            };
+                paySign: prepayResult.paySign,
+            }
 
             // 检查必要参数是否为空
-            if (!paymentParams.timeStamp || !paymentParams.nonceStr || 
-                !paymentParams.package || !paymentParams.paySign) {
-                reject({ errMsg: '支付参数不完整' });
-                return;
+            if (!paymentParams.timeStamp || !paymentParams.nonceStr || !paymentParams.package || !paymentParams.paySign) {
+                reject({ errMsg: '支付参数不完整' })
+                return
             }
             wx.requestPayment({
                 ...paymentParams,
                 success: resolve,
-                fail: reject
-            });
-        });
+                fail: reject,
+            })
+        })
     },
 
     // 支付成功处理
     async handlePaymentSuccess(res) {
-        console.log('支付成功', res)
         try {
-            await productApi.productUserSave({
-                ...this.data.fromItem,
-                outTradeNo: res.outTradeNo,
-                prodType: 1,
-            })
+            await productApi.productUserSave({ ...this.data.fromItem,ordertime: new Date(), outTradeNo: res.outTradeNo })
             wx.showToast({ title: '支付并保存成功' })
+            this.setData({ isShowBut: false })
         } catch (e) {
             console.error('保存失败', e)
             wx.showToast({ title: '支付成功但保存失败', icon: 'none' })
@@ -170,8 +167,6 @@ Page({
             duration: 2000,
         })
     },
-
-
 
     // 错误码映射
     getErrorMessage(code) {

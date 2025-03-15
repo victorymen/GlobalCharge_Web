@@ -16,7 +16,7 @@
   </view>
 
   <!-- 固定在底部的付款按钮 -->
-<view class="fixed-bottom">
+<view class="fixed-bottom" wx:if="{{isShowBut}}" >
   <van-goods-action>
   <van-goods-action-button text="立即付款" bind:click="onClickButton" />
 </van-goods-action>

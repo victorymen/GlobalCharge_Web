@@ -4,6 +4,7 @@
     "van-tabs": "@vant/weapp/tabs/index",
     "van-tab": "@vant/weapp/tab/index",
     "van-cell": "@vant/weapp/cell/index",
-    "towxml":"/towxml/towxml"
+    "towxml":"/towxml/towxml",
+    "hg-editor": "component/hg-editor/hg-editor"
     }
 }

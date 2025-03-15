@@ -1,7 +1,8 @@
 <view class="content">
 
 
-
-  <towxml nodes="{{article}}"/>
+  <hg-editor showTabBar="{{true}}" placeholder="请输入内容" uploadImageURL="https://wechatglow.online/api/userInfo/uploadFile" bind:input="onContentChange">
+  </hg-editor>
+  <!-- <towxml nodes="{{article}}"/> -->
 
 </view>

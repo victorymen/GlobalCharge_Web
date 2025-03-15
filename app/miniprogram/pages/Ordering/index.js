@@ -4,12 +4,20 @@ Page({
     data: {
         active: 0,
         loading: true,
+        ItemKey:{
+        UNPAID:'待支付',
+        CHARGEING:'充值中',
+        PAID:'已支付',
+        DELIVERING:'发货中',
+        COMPLETED:'已完成',
+        CANCELLED:'已取消',
+      },
         tabList: [
             { title: '全部', status: 'all' },
-            { title: '待支付', status: 'pending' },
+            { title: '待支付', status: 'UNPAID' },
             { title: '待处理', status: 'processing' },
-            { title: '已完成', status: 'completed' },
-            { title: '已取消', status: 'canceled' },
+            { title: '已完成', status: 'COMPLETED' },
+            { title: '已取消', status: 'CANCELLED' },
         ],
         orders: [],
     },
@@ -23,8 +31,8 @@ Page({
 
     async loadOrders(tabIndex) {
       try {
-        const { title } = this.data.tabList[tabIndex] // 使用预定义的status值代替中文判断
-        const params = title === '全部' ? {} : { sernoberstate:title } // 使用接口标准参数名
+        const { status } = this.data.tabList[tabIndex] // 使用预定义的status值代替中文判断
+        const params = status === 'all' ? {} : { sernoberstate:status } // 使用接口标准参数名
         const { records } = await productApi.productUserGet({openid:this.data.openid,...params})
         this.setOrdersData(records)
     } catch (e) {
@@ -35,7 +43,6 @@ Page({
 
     // 订单过滤方法
     filterOrders(status) {
-        console.log(status)
         return status === 'all' ? this.data.orders : this.data.orders.filter((o) => o.status === status)
     },
 
@@ -53,10 +60,7 @@ Page({
     // 新增公共方法处理订单数据
     setOrdersData(records) {
         this.setData({
-            orders: records.map((item) => ({
-                ...item,
-                ordertime: this.formatTime(item.ordertime),
-            })),
+            orders: records.map((item) => ({  ...item,  ordertime: this.formatTime(item.ordertime),  })),
             loading: false,
         })
     },

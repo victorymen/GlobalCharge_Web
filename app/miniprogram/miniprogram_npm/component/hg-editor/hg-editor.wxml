@@ -1,0 +1,7 @@
+<editor id="editor1" 
+        placeholder="请输入内容" 
+        bindstatuschange="onStatusChange" 
+        bindready="onEditorReady" 
+        show-img-size="{{true}}"
+        bindblur="onBlur">
+</editor>

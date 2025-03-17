@@ -38,9 +38,7 @@ Page({
                     fromItem: {
                         proid: fromItem.id,
                         ...fromItem,
-                        openid: wx.getStorageSync('userInfo').openid,
-                        userpaystate: '未支付',
-                        sernoberstate: '待支付',
+                        openid: wx.getStorageSync('userInfo').openid
                     },
                     'paymentParams.goodsPrice': fromItem.selling_price, // 动态设置价格
                     isShowBut: true,
@@ -78,6 +76,7 @@ Page({
         const formattedExpireTime = expireTime.toISOString().replace(/[-:T]/g, '').slice(0, 14)
         // 生成商户订单号
         const outTradeNo = this.generateOutTradeNo()
+        // await this.handlePaymentSuccess({outTradeNo:outTradeNo})
         try {
             const prepayResult = await wxApi.prepayWithRequestPayment({
                 description: this.data.fromItem.cname + '-' + this.data.fromItem.typeName + '-' + this.data.fromItem.ename + '-' + this.data.fromItem.title, // 商品描述
@@ -148,15 +147,22 @@ Page({
     // 支付成功处理
     async handlePaymentSuccess(res) {
         try {
-            await productApi.productUserSave({ ...this.data.fromItem,ordertime: new Date(), outTradeNo: res.outTradeNo })
+          const items=  await productApi.productUserSave({ ...this.data.fromItem,ordertime: new Date(), outTradeNo: res.outTradeNo })
             wx.showToast({ title: '支付并保存成功' })
-            this.setData({ isShowBut: false })
+            this.setData({ isShowBut: false, cardpassword: items})
         } catch (e) {
             console.error('保存失败', e)
             wx.showToast({ title: '支付成功但保存失败', icon: 'none' })
         }
     },
-
+    onClickOpend(){
+         wx.sendSms({
+            phoneNumber:"15102994475",
+            content:this.data.cardpassword,
+            success:(res)=>{},
+            fail:(err)=>{}
+        })
+    },
     // 支付失败处理
     handlePaymentError(error) {
         console.error('支付失败', error)

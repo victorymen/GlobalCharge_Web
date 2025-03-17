@@ -15,13 +15,21 @@
     <van-cell title="人民币售价：" value="{{fromItem.yh}}" size="large" />
   </view>
 
+  <view class="price-container" wx:if="{{!isShowBut&&fromItem.chargetype==1}}">
+    <van-cell title="卡密：" value="{{cardpassword}}" size="large" />
+  </view>
+
   <!-- 固定在底部的付款按钮 -->
-<view class="fixed-bottom" wx:if="{{isShowBut}}" >
-  <van-goods-action>
-  <van-goods-action-button text="立即付款" bind:click="onClickButton" />
-</van-goods-action>
-</view>
+  <view class="fixed-bottom" wx:if="{{isShowBut}}">
+    <van-goods-action>
+      <van-goods-action-button text="立即付款" bind:click="onClickButton" />
+    </van-goods-action>
+  </view>
+
+  <view class="fixed-bottom" wx:if="{{!isShowBut}}">
+    <van-goods-action>
+      <van-goods-action-button text="本机卡密充值" bind:click="onClickOpend" />
+    </van-goods-action>
+  </view>
 
 </view>
-
-
